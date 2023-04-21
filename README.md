@@ -9,14 +9,50 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
 ## Antes de começar:
 - Configurar o AWS CLi com a credencial criada (Access Key e Secret Access Key)
+ ```
     aws configure 
+ ```
+- Criar arquivos de configuração do terraform:
+ ```
+ # arquivo aws_provider.tf
+ terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+# Provider
+provider "aws" {
+  profile = "default"
+  region  = var.region
+}
+ 
+ # arquivo aws_variaveis.tf
+ #Declaracao de variaveis do terraform
+variable "region" {
+  default     = "us-east-1"
+  description = "Default Region"
+}
 
-- Inicializar o terraform e realizar download do provider: (necessário arquivos aws_provider.tf e aws_variaveis.tf):
-   terraform init #Download do provider 
+variable "instance_type" {
+  default     = "t2.micro"
+  description = "Default Instance Type"
+}
 
+variable "env" {
+  default     = "dev"
+  description = "Default Env Tag Value"
+}
+ ```
+- Inicialiar terraform e baixar provider:
+ ```
+ terraform init  
+ ```
 ## Primeira Task - Criar uma EC2 Linux e disponibilizar a aplicação (/app/index.html).
 ### Criar compentes de Rede:
-	- VPC -  https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
+- VPC -  https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
     ```
     # VPC
     resource "aws_vpc" "lab-vpc" {
@@ -27,7 +63,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
         }
     }
     ```
-	-Subrede -  https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet
+- Subrede -  https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet
     ```
     # Subnet Pública
     resource "aws_subnet" "lab-subnet-1" {
@@ -39,7 +75,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
         }
     }   
     ``` 
-	-Internet Gateway - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway
+- Internet Gateway - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway
     ```
     # Internet Gateway
     resource "aws_internet_gateway" "lab-gw" {
@@ -49,7 +85,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
         }
     }
     ```
-	-Tabela de Rotas - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table
+- Tabela de Rotas - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table
 	``` 
     # Route table 
     resource "aws_route_table" "lab-public-rt" {
@@ -63,7 +99,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
         }
     }
     ```
-    -Associacao da tabela de rotas com o a subrede - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association
+- Associação da tabela de rotas com o a subrede - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association
 	``` 
     # Route table e public subnets
     resource "aws_route_table_association" "lab-rt-public-subnet-1" {
@@ -71,7 +107,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
     route_table_id = aws_route_table.lab-public-rt.id // Referencia a tabela de rota criada acima
     }
     ```
-    -Security Group - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+ - Security Group - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
     ```
     # Security group
     resource "aws_security_group" "ssh_http_allowed" {
@@ -104,7 +140,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
     }
     ```
 ### Criar chaves de acesso 
-	Key Pair
+- Key Pair
     ```
     # Criar private key em formato PEM.
     resource "tls_private_key" "key_pair" {
