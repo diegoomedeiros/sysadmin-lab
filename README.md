@@ -65,7 +65,7 @@ variable "env" {
     ```
 - Subrede -  https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet
     ```
-    # Subnet Pública
+    # Subrede Pública
     resource "aws_subnet" "lab-subnet-1" {
     vpc_id                  = aws_vpc.lab-vpc.id  // Referencia a VPC criada acima
     cidr_block              = "10.1.1.0/24"
@@ -113,9 +113,9 @@ variable "env" {
     resource "aws_security_group" "ssh_http_allowed" {
     vpc_id      = aws_vpc.lab-vpc.id  // Referencia a VPC criada acima
     name        = "ssh_http_allowed"
-    description = "Allow SSH and HTTP inbound traffic and full outbound"
+    description = "Libera entrada de trafego SSH e HTTP e saída"
 
-    egress { //Saida liberada
+    egress { //Saída liberada
         from_port   = 0
         to_port     = 0
         protocol    = -1
@@ -142,17 +142,17 @@ variable "env" {
 ### Criar chaves de acesso 
 - Key Pair
     ```
-    # Criar private key em formato PEM.
+    # Criar chave privada.
     resource "tls_private_key" "key_pair" {
     algorithm = "RSA"
     rsa_bits  = 4096
     }
-    # Gera a chave publica para configuracao
+    # Gera a chave pública.
     resource "aws_key_pair" "key_pair" {
     key_name   = "lab-key-pair"
     public_key = tls_private_key.key_pair.public_key_openssh
     }
-    # Salva a private key em um arquivo local para conexao ssh.
+    # Salva a chave privada em um arquivo local para conexao ssh.
     resource "local_file" "ssh_key" {
     filename = "${aws_key_pair.key_pair.key_name}.pem"
     content  = tls_private_key.key_pair.private_key_pem
