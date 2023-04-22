@@ -5,6 +5,7 @@ resource "aws_vpc" "lab-vpc" {
   enable_dns_hostnames = "true"
   tags = {
     env = var.env
+    Name = "lab-vpc"
   }
 }
 # Subnet Publica
@@ -15,6 +16,7 @@ resource "aws_subnet" "lab-subnet-1" {
   map_public_ip_on_launch = "true" 
   tags = {
     env = var.env
+    Name = "lab-subnet"
   }
 }
 # Internet Gateway
@@ -23,6 +25,7 @@ resource "aws_internet_gateway" "lab-gw" {
   vpc_id = aws_vpc.lab-vpc.id
   tags = {
     env = var.env
+    Name = "lab-gw"
   }
 }
 # Route table 
@@ -35,6 +38,7 @@ resource "aws_route_table" "lab-public-rt" {
   }
   tags = {
     env = var.env
+    Name = "lab-rt"
   }
 }
 # Route table e public subnets
