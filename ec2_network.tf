@@ -1,7 +1,7 @@
 # VPC
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
 resource "aws_vpc" "lab-vpc" {
-  cidr_block           = "10.1.0.0/16"
+  cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = "true"
   tags = {
     env = var.env
@@ -10,9 +10,9 @@ resource "aws_vpc" "lab-vpc" {
 # Subnet Publica
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet
 resource "aws_subnet" "lab-subnet-1" {
-  vpc_id                  = aws_vpc.lab-vpc.id // Referencing the id of the VPC from abouve code block
-  cidr_block              = "10.1.1.0/24"
-  map_public_ip_on_launch = "true" // Makes this a public subnet
+  vpc_id                  = aws_vpc.lab-vpc.id 
+  cidr_block              = var.subrede_cidr_block
+  map_public_ip_on_launch = "true" 
   tags = {
     env = var.env
   }
