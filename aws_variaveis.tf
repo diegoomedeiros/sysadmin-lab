@@ -13,3 +13,19 @@ variable "env" {
   default     = "dev"
   description = "Default Env Tag Value"
 }
+
+variable "vpc_cidr_block" {
+  default = "10.1.0.0/16"
+}
+
+variable "subrede_cidr_block" {
+  default = "10.1.1.0/24"
+}
+
+variable "win_private_ip" {
+  default = "10.1.1.20"
+}
+
+variable "lnx_private_ip" {
+  default = "10.1.1.10"
+}
