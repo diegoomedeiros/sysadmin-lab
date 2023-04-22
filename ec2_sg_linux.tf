@@ -23,7 +23,12 @@ resource "aws_security_group" "ssh_http_allowed" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+  ingress { //Libera icmp na subrede
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    cidr_blocks = ["10.1.1.0/24"]
+  }
   tags = {
     env = var.env
   }
