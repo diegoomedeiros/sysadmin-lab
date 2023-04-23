@@ -12,15 +12,17 @@ data "template_file" "windows-userdata" {
 <powershell>
 # Install DNS
 Install-WindowsFeature -Name DNS -IncludeManagementTools ;
+# Config Zona LAB.COM
 Add-DNSServerPrimaryZone -name lab.com -Zonefile lab.com.DNS -DynamicUpdate NonsecureAndSecure
+# Add entrata DNS tipo A para o servidor web-server
 Add-DNSServerResourceRecordA -name web-server -Zonename lab.com -AllowUpdateAny -IPv4Address "${aws_instance.web-server.private_ip}"
-
+# Incluindo o proprio servidor como DNS primário.
 $index = Get-NetIPAddress | Where-Object -FilterScript { $_.IPv4Address -eq "${var.win_private_ip}"} | Select-Object -Property InterfaceIndex
 Set-DnsClientServerAddress -InterfaceIndex $index.InterfaceIndex -ServerAddresses ("${var.win_private_ip}")
 </powershell>
 EOF
 }
-
+#Interface de Rede com ip fixo e sg.
 resource "aws_network_interface" "win_interface" {
   subnet_id       = aws_subnet.lab-subnet-1.id
   private_ips     = [var.win_private_ip]
