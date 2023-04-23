@@ -26,8 +26,9 @@ resource "aws_instance" "web-server" {
     network_interface_id = aws_network_interface.lnx_interface.id
     device_index         = 0
   }
+  #Ativar monitoramento detalhado
   #monitoring             = true
-  # the Public SSH key
+  # Chave SSH Publica
   key_name = aws_key_pair.key_pair.key_name
 
   # nginx e git installation
@@ -36,15 +37,15 @@ resource "aws_instance" "web-server" {
     source      = "linux_config.sh"
     destination = "/tmp/linux_config.sh"
   }
-  # Executando o arquivo config.sh
 
+  # Executando o arquivo linux_config.sh
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/linux_config.sh",
       "sudo /tmp/linux_config.sh"
     ]
   }
-  # Setting up the ssh connection to install the nginx server
+  # Config para acesso SSH
   connection {
     type        = "ssh"
     host        = self.public_ip
