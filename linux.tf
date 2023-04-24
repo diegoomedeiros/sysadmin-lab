@@ -18,26 +18,33 @@ resource "aws_instance" "web-server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   tags = {
-    Name = "web-server"
-    env  = var.env
+    Name   = "web-server"
+    env    = var.env
+    Backup = true
   }
 
   network_interface {
     network_interface_id = aws_network_interface.lnx_interface.id
     device_index         = 0
   }
-  #Ativar monitoramento detalhado
+  ## Unidade Extra
+  ebs_block_device {
+    device_name           = "/dev/xvdc"
+    volume_size           = 25
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
   #monitoring             = true
-  # Chave SSH Publica
+  # Chave publica para SSH 
   key_name = aws_key_pair.key_pair.key_name
 
-  # nginx e git installation
+  # Instalação do nginx
   # Arquivo que será executado na instancia
   provisioner "file" {
     source      = "linux_config.sh"
     destination = "/tmp/linux_config.sh"
   }
-
+  
   # Executando o arquivo linux_config.sh
   provisioner "remote-exec" {
     inline = [
@@ -45,7 +52,7 @@ resource "aws_instance" "web-server" {
       "sudo /tmp/linux_config.sh"
     ]
   }
-  # Config para acesso SSH
+  # Setup de conexao ssh para execucao do script linux_config.sh
   connection {
     type        = "ssh"
     host        = self.public_ip
