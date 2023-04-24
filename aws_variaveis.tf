@@ -29,3 +29,10 @@ variable "win_private_ip" {
 variable "lnx_private_ip" {
   default = "10.1.1.10"
 }
+
+variable "backup_schedule" {
+  default = "cron(0 0 * * ? *)" /* UTC Time */
+}
+variable "backup_retention" {
+  default = 7
+}
