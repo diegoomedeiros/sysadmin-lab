@@ -22,7 +22,7 @@ Set-DnsClientServerAddress -InterfaceIndex $index.InterfaceIndex -ServerAddresse
 </powershell>
 EOF
 }
-#Interface de Rede com ip fixo e sg.
+
 resource "aws_network_interface" "win_interface" {
   subnet_id       = aws_subnet.lab-subnet-1.id
   private_ips     = [var.win_private_ip]
@@ -34,9 +34,11 @@ resource "aws_instance" "dns-server" {
   ami           = data.aws_ami.windows-2022.id
   instance_type = var.instance_type
   tags = {
-    Name = "dns-server"
-    env  = var.env
+    Name   = "dns-server"
+    env    = var.env
+    Backup = true
   }
+
   network_interface {
     network_interface_id = aws_network_interface.win_interface.id
     device_index         = 0
@@ -55,5 +57,3 @@ resource "aws_instance" "dns-server" {
   user_data = data.template_file.windows-userdata.rendered
 
 }
-
-
