@@ -1,5 +1,19 @@
 # SYSOPS - Lab
 
+## Lista de tarefas
+
+1 - Criar uma EC2 Linux e disponibilizar a aplicação (/app/index.html).
+
+2 - Criar um servidor Windows e disponibilizar o serviço de DNS.
+
+3 - Reduzir 5GB de disco do servidor Linux online (sem desligar o servidor).
+
+4 - Aumentar 5GB de disco do servidor Windows online (sem desligar o servidor).
+
+5 - Criar uma rotina de Backup para ambos os servidores.
+
+6 - Adicionar monitoramento para ambos os servidores.
+
 ## Recursos Necessários
 - Ter uma credencial com permissão para manipular EC2, Backup e criação de Role no IAM.
 - Ter o Terraform instalado:
